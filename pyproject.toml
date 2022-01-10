@@ -18,6 +18,7 @@ requires = []
 [tool.briefcase.app.helloworld.macOS]
 requires = [
     'toga-cocoa>=0.3.0.dev20',
+    'pygame'
 ]
 
 [tool.briefcase.app.helloworld.linux]
