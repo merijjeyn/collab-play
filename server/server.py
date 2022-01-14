@@ -46,16 +46,19 @@ class game:
 
 GAMES = {}
 
-def create_game(gamename, socket)
+def create_game(socket, gamename):
     new_game = game(gamename,socket)
     GAMES[gamename] = new_game
+    print('create_game', gamename, socket)
 
 
-def join_game(username, gamename):    
+def join_game(client_connection, username, gamename):    
     GAMES[gamename].users.add(username)
-    sendfunction(GAMES[gamename].socket, {"type":"player_join", "username":username}) 
+    sendfunction(GAMES[gamename].socket, {"type":"join_game", "username":username}) 
+    print('join_game: ',username, gamename)
     while True:
         request_string = client_connection.recv(1024).decode()
+        print('new key stroke: ', request_string)
         sendfunction(GAMES[gamename].socket, json.loads(request_string))
 
 
@@ -63,10 +66,10 @@ def new_connection(client_connection):
     request_string = client_connection.recv(1024).decode()
 
     new_message = json.loads(request_string)
-    if new_message['type'] = "create_game":
-        create_game(new_message['gamename'], client_connection):
-    elif new_message['type'] = "join_game":
-        join_game(new_message['username'], new_message['gamename'], client_connection)
+    if new_message['type'] == "create_game":
+        create_game(client_connection, new_message['gamename'])
+    elif new_message['type'] == "join_game":
+        join_game(client_connection, new_message['username'], new_message['gamename'])
 
 start_server()
 
