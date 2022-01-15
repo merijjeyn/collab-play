@@ -1,5 +1,8 @@
 import sys, pygame
+from tkinter import RIGHT
 from pathlib import Path
+from .network import Network
+from .constants import *
 
 PLAYER_SPEED = 2
 
@@ -9,6 +12,24 @@ class Game:
         self.height = height
         self.size = width, height
         self.backgroundColor = backgroundColor
+
+        self.network = Network()
+        self.leftTeamActions = {}
+        self.rightTeamActions = {}
+
+    def player_action(self, player, type, key):
+        players = self.network.get_players_in_room()
+        if player in players[LEFTTEAM]:
+            actions = self.leftTeamActions
+        elif player in players[RIGHTTEAM]:
+            actions = self.rightTeamActions
+
+        if type == KEYDOWN:
+            actions[player] = key
+        elif type == KEYUP:
+            del actions[player]
+      
+
 
     def main_loop(self):
         screen = pygame.display.set_mode(self.size)
@@ -34,7 +55,7 @@ class Game:
 
         leftSpeed = [0, 0]
         rightSpeed = [0, 0]
-        ballSpeed = [1,1]
+        ballSpeed = [3,3]
 
 
         exited = False
