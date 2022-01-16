@@ -23,7 +23,7 @@ class Game:
 
     def player_action(self, player, type, key=None):
         if type == 'join_game':
-            if len(self.leftTeam) >= len(self.rightTeam):
+            if len(self.leftTeam) <= len(self.rightTeam):
                 self.leftTeam.add(player)
             else:
                 self.rightTeam.add(player)
@@ -35,7 +35,7 @@ class Game:
 
             if type == KEYDOWN:
                 actions[player] = key
-            elif type == KEYUP:
+            elif type == KEYUP and player in actions:
                 del actions[player]
 
     def calc_collab_actions(self, team, actions):
@@ -92,16 +92,23 @@ class Game:
 
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: 
                     isPaused = not isPaused
-                #     elif event.key == pygame.K_w: leftSpeed[1] = -1 * MAX_PLAYER_SPEED
-                #     elif event.key == pygame.K_s: leftSpeed[1] = MAX_PLAYER_SPEED
-                #     elif event.key == pygame.K_UP: rightSpeed[1] = -1 * MAX_PLAYER_SPEED
-                #     elif event.key == pygame.K_DOWN: rightSpeed[1] = MAX_PLAYER_SPEED
-
-                # elif event.type == pygame.KEYUP:
-                #     if event.key in [pygame.K_w, pygame.K_s]: leftSpeed[1] = 0
-                #     elif event.key in [pygame.K_UP, pygame.K_DOWN]: rightSpeed[1] = 0
 
             screen.fill(self.backgroundColor)
+
+            # Render names
+            playerFont = pygame.font.SysFont('Verdana', 12)
+            for i, player in enumerate(self.leftTeam):
+                playerText = playerFont.render(player, True, (0,255,0))
+                playerRect = playerText.get_rect()
+                playerRect.update(self.width/2 - playerRect.width, i*(playerRect.height + 5), playerRect.width, playerRect.height)
+                screen.blit(playerText, playerRect)
+
+            for i, player in enumerate(self.rightTeam):
+                playerText = playerFont.render(player, True, (255,165,0))
+                playerRect = playerText.get_rect()
+                playerRect.update(self.width/2, i*(playerRect.height + 5), playerRect.width, playerRect.height)
+                screen.blit(playerText, playerRect)
+
             
             if not isPaused:
                 leftSpeed = self.calc_collab_actions(self.leftTeam, self.leftTeamActions)

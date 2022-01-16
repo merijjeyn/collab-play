@@ -48,9 +48,9 @@ class Controller:
                 elif event.type == pygame.MOUSEBUTTONUP:
                     mousePos = pygame.mouse.get_pos()
                     if upRect.collidepoint(mousePos):
-                        self.network.make_action(type=KEYUP, key=DIRDOWN)
-                    elif downRect.collidepoint(mousePos):
                         self.network.make_action(type=KEYUP, key=DIRUP)
+                    elif downRect.collidepoint(mousePos):
+                        self.network.make_action(type=KEYUP, key=DIRDOWN)
 
    
             screen.fill(self.backgroundColor)
