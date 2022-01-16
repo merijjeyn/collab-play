@@ -1,12 +1,21 @@
 import pygame, sys
 from pathlib import Path
 
+from .constants import *
+
+from .network import Network
+
 class Controller:
-    def __init__(self, width, height, backgroundColor):
+    def __init__(self, width, height, backgroundColor, gameName, username):
         self.width = width
         self.height = height
         self.size = width, height
         self.backgroundColor = backgroundColor
+        self.gameName = gameName
+        self.username = username
+
+        self.network = Network(gameName, username)
+        self.network.start_player_connection()
 
     def main_loop(self):
         screen = pygame.display.set_mode(self.size)
@@ -23,8 +32,6 @@ class Controller:
         downRect.update(self.width/2 + 10, self.height/2 - downRect.height/2, downRect.width, downRect.height)
 
         exited = False
-        pressingUp = False
-        pressingDown = False
         while not exited:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: sys.exit()
@@ -34,23 +41,18 @@ class Controller:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mousePos = pygame.mouse.get_pos()
                     if upRect.collidepoint(mousePos):
-                        pressingUp = True
+                        self.network.make_action(type=KEYDOWN, key=DIRUP)
                     elif downRect.collidepoint(mousePos):
-                        pressingDown = True
+                        self.network.make_action(type=KEYDOWN, key=DIRDOWN)
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     mousePos = pygame.mouse.get_pos()
                     if upRect.collidepoint(mousePos):
-                        pressingUp = False
+                        self.network.make_action(type=KEYUP, key=DIRDOWN)
                     elif downRect.collidepoint(mousePos):
-                        pressingDown = False
+                        self.network.make_action(type=KEYUP, key=DIRUP)
 
-            if pressingUp:
-                print("Pressing up")
-            if pressingDown:
-                print("pressing down")         
-
-
+   
             screen.fill(self.backgroundColor)
             screen.blits([(down, downRect), (up, upRect)])
             pygame.display.flip()
