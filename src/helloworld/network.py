@@ -46,11 +46,6 @@ class Network(metaclass=SingletonMeta):
             raise Exception("Username not initialized for player")
         
         self.player_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        if MULTIPLE_CLIENTS_ON_SAME_MACHINE:
-            print('Local port?')
-            localPort = input()
-            self.player_socket.bind(('0.0.0.0', int(localPort)))
         
         self.player_socket.connect((SERVER_IP, PORT))
         message = {'type': 'join_game', 'gamename': self.gameName, 'username': self.username}
