@@ -6,7 +6,6 @@ import json
 
 PORT = 8080               
 SERVER_IP = '137.117.158.139'
-MULTIPLE_CLIENTS_ON_SAME_MACHINE = False
 
 
 class SingletonMeta(type):
@@ -28,12 +27,6 @@ class Network(metaclass=SingletonMeta):
 
     def host_connection(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        if MULTIPLE_CLIENTS_ON_SAME_MACHINE:
-            print('Local port?')
-            localPort = input()
-            sock.bind(('0.0.0.0', int(localPort)))
-        
         sock.connect((SERVER_IP, PORT)) 
         message = {'type': 'create_game', 'gamename': self.gameName}
         sock.send(json.dumps(message).encode('utf-8'))
