@@ -109,16 +109,17 @@ class Game:
                 playerRect.update(self.width/2, i*(playerRect.height + 5), playerRect.width, playerRect.height)
                 screen.blit(playerText, playerRect)
 
+
+            leftSpeed = self.calc_collab_actions(self.leftTeam, self.leftTeamActions)
+            rightSpeed = self.calc_collab_actions(self.rightTeam, self.rightTeamActions)
+
+            # Move players
+            if leftPlayerRect.top + leftSpeed[1] > 0 and leftPlayerRect.bottom + leftSpeed[1] < self.height:
+                leftPlayerRect = leftPlayerRect.move(leftSpeed)
+            if rightPlayerRect.top + rightSpeed[1] > 0 and rightPlayerRect.bottom + rightSpeed[1] < self.height:
+                rightPlayerRect = rightPlayerRect.move(rightSpeed)
             
             if not isPaused:
-                leftSpeed = self.calc_collab_actions(self.leftTeam, self.leftTeamActions)
-                rightSpeed = self.calc_collab_actions(self.rightTeam, self.rightTeamActions)
-
-                # Move players
-                if leftPlayerRect.top + leftSpeed[1] > 0 and leftPlayerRect.bottom + leftSpeed[1] < self.height:
-                    leftPlayerRect = leftPlayerRect.move(leftSpeed)
-                if rightPlayerRect.top + rightSpeed[1] > 0 and rightPlayerRect.bottom + rightSpeed[1] < self.height:
-                    rightPlayerRect = rightPlayerRect.move(rightSpeed)
 
                 # Move ball
                 ballRect = ballRect.move(ballSpeed)
